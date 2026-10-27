@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estratégia de Experimentação | Jornada digital de clientes novos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --hdr:#1E1D2B; --hdr-ink:#FFFFFF; --hdr-soft:#B9B8C6; --strip:#1F3A5F; --strip-ink:#E6ECF5;
+  --bg:#F4F4F5; --card:#FFFFFF; --ink:#1E1D2B; --muted:#6E6D7A; --line:#E7E7EC;
+  --orange:#FF6B35; --orange-bg:#FFF1EA; --green:#22863A; --green-bg:#EAF6EC; --blue:#1F3A5F; --blue-bg:#EAF0F7;
+  --bar:#FF6B35; --bar2:#D6D6DD;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --hdr:#0E0E16; --strip:#15283F; --bg:#121218; --card:#1C1C26; --ink:#EDEDF2; --muted:#A3A2B0; --line:#2D2D3A;
+    --orange-bg:#3A2219; --green:#5CC774; --green-bg:#173322; --blue:#8FB3E0; --blue-bg:#1A2636; --bar2:#3A3A48;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --hdr:#0E0E16; --strip:#15283F; --bg:#121218; --card:#1C1C26; --ink:#EDEDF2; --muted:#A3A2B0; --line:#2D2D3A;
+  --orange-bg:#3A2219; --green:#5CC774; --green-bg:#173322; --blue:#8FB3E0; --blue-bg:#1A2636; --bar2:#3A3A48;
+  color-scheme:dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:1.5}
+header.top{background:var(--hdr);color:var(--hdr-ink);padding:18px 32px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:12px;align-items:flex-start}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--orange);margin-top:9px;flex:none}
+.brand h1{margin:0;font-size:24px;font-weight:800;line-height:1.3}
+.brand p{margin:2px 0 0;color:var(--hdr-soft);font-size:17px}
+.upd{color:var(--hdr-soft);font-size:15px}
+.strip{background:var(--strip);color:var(--strip-ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;padding:7px 32px;overflow-x:auto;white-space:nowrap}
+main{max-width:1320px;margin:0 auto;padding:24px 32px 64px}
+.pills{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 22px}
+.pills .lbl{font-weight:600;color:var(--muted);margin-right:4px}
+.pill{font:inherit;font-size:16px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 16px;cursor:pointer}
+.pill[aria-selected="true"]{background:var(--hdr);color:#fff;border-color:var(--hdr);font-weight:700}
+:root[data-theme="dark"] .pill[aria-selected="true"]{background:var(--orange);border-color:var(--orange)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pill[aria-selected="true"]{background:var(--orange);border-color:var(--orange)}}
+.pill:focus-visible,.next:focus-visible,a:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.card{background:var(--card);border-radius:12px;padding:22px 26px;margin-bottom:20px;box-shadow:0 1px 2px rgba(20,20,40,.06)}
+.card h3{margin:0 0 14px;font-size:15px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.card h4{margin:0 0 10px;font-size:17px;font-weight:800}
+.hl{list-style:none;margin:0;padding:0}
+.hl li{display:flex;gap:12px;align-items:flex-start;margin:0 0 10px;font-size:17px}
+.hl li .ic{flex:none;width:22px;text-align:center}
+.hl .ok{color:var(--green)}.hl .warn{color:var(--orange)}.hl .info{color:var(--blue)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:12px;padding:20px 24px;box-shadow:0 1px 2px rgba(20,20,40,.06)}
+.kpi .k{font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-size:34px;font-weight:800;margin:6px 0 2px;line-height:1.15}
+.kpi .v.o{color:var(--orange)}
+.kpi .s{font-size:14.5px;color:var(--muted)}
+.prog-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
+.prog-h b{font-size:17px}
+.prog-h .pct{font-size:26px;font-weight:800;color:var(--orange)}
+.track{height:14px;background:var(--bar2);border-radius:999px;overflow:hidden}
+.fill{height:100%;background:var(--bar);border-radius:999px}
+.legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:10px;font-size:14.5px;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{text-align:left;font-weight:700;color:var(--muted);font-size:13px;letter-spacing:.04em;text-transform:uppercase;border-bottom:2px solid var(--line);padding:8px 12px 8px 0}
+td{border-bottom:1px solid var(--line);padding:9px 12px 9px 0;vertical-align:top}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.on td{background:var(--orange-bg)}
+.bars{display:flex;flex-direction:column;gap:10px}
+.br{display:grid;grid-template-columns:minmax(120px,190px) 1fr 58px;gap:12px;align-items:center;font-size:15px}
+.br .t{height:18px;background:var(--bar2);border-radius:999px;overflow:hidden}
+.br .t span{display:block;height:100%;background:var(--bar);border-radius:999px}
+.br .t span.g{background:var(--muted)}
+.br .t span.gr{background:var(--green)}
+.br b{text-align:right;font-variant-numeric:tabular-nums}
+.funnel .br{grid-template-columns:minmax(150px,230px) 1fr 150px}
+.funnel .br .t{height:30px;border-radius:6px}
+.funnel .br .t span{border-radius:6px;display:flex;align-items:center;padding-left:10px;color:#fff;font-weight:800;font-size:15px}
+.funnel .br .t span.g{background:var(--blue)}
+.funnel .br small{color:var(--muted);text-align:left}
+.callout{border-left:4px solid var(--orange);background:var(--orange-bg);padding:12px 16px;border-radius:0 8px 8px 0;font-size:15.5px;margin-top:14px}
+.callout.g{border-color:var(--green);background:var(--green-bg)}
+.callout.b{border-color:var(--blue);background:var(--blue-bg)}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--green-bg);color:var(--green);white-space:nowrap}
+.tag.o{background:var(--orange-bg);color:var(--orange);box-shadow:inset 0 0 0 1px var(--orange)}
+.tag.b{background:var(--blue-bg);color:var(--blue)}
+.check{list-style:none;margin:0;padding:0;columns:2;column-gap:32px}
+.check li{break-inside:avoid;margin:0 0 10px;padding-left:28px;position:relative;font-size:15.5px}
+.check li::before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-weight:800}
+.check a{color:var(--blue);font-weight:700;text-decoration:none;border-bottom:1px dotted currentColor;cursor:pointer}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:4px 0 6px}
+.flow div{border-top:4px solid var(--orange);padding:10px 14px 0 0}
+.flow b{display:block;font-size:16px}
+.flow span{font-size:14.5px;color:var(--muted)}
+.msgs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.msg{border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px}
+.msg .c{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.msg.wa{background:var(--green-bg);border-color:transparent;border-radius:14px 14px 14px 4px}
+.msg .btn{display:inline-block;margin:8px 6px 0 0;border:1px solid var(--blue);color:var(--blue);border-radius:999px;padding:2px 12px;font-size:13.5px;font-weight:700}
+.hx{display:grid;grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr) 32px minmax(0,1fr);gap:0;align-items:stretch;border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.hx > div{padding:14px 18px}
+.hx .hy{background:var(--blue-bg)}
+.hx .ar{display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:var(--orange);background:var(--card)}
+.hx .ac{background:var(--orange-bg)}
+.hx .ms{background:var(--green-bg)}
+.hx ul{margin:0;padding-left:18px;font-size:14.5px}.hx li{margin-bottom:4px}
+.hx .lb{font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.hx p{margin:0 0 6px;font-size:15.5px}
+.hx .meta{grid-column:1/-1;background:var(--card);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 22px;font-size:14px;color:var(--muted);padding:10px 18px}
+.hx .meta b{color:var(--ink)}
+@media (max-width:900px){.hx{grid-template-columns:minmax(0,1fr)}.hx .ar{transform:rotate(90deg);padding:4px}}
+.dec td:first-child{font-weight:700;white-space:nowrap}
+.foot-nav{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:12px;flex-wrap:wrap}
+.next{font:inherit;font-weight:700;background:var(--orange);color:#fff;border:0;border-radius:999px;padding:10px 20px;cursor:pointer}
+.next.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.chap{display:none}.chap.show{display:block}
+.small{font-size:14px;color:var(--muted)}
+p{margin:0 0 10px}
+ul.plain{margin:0;padding-left:20px}ul.plain li{margin-bottom:6px}
+@media (max-width:900px){
+  header.top,main{padding-left:16px;padding-right:16px}.strip{padding-left:16px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.kpi{padding:16px}.kpi .v{font-size:26px}.grid2,.grid3,.msgs{grid-template-columns:minmax(0,1fr)!important}.check{columns:1}
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .funnel .br{grid-template-columns:120px 1fr 90px}
+}
+@media print{.pills,.foot-nav{display:none}.chap{display:block!important;page-break-after:always}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="dot" aria-hidden="true"></span><div><h1>Estratégia de Experimentação</h1><p>Jornada digital de clientes novos · Case</p></div></div>
+  <div class="upd">Base até 01/08/2026 · Gabriela Macedo</div>
+</header>
+<div class="strip">Aba: [Base_Dados] | Rows: 3.600 | Onboarding: mar–jul/2026 | Tratadas: 3.600 | Fora dos públicos de teste: 86</div>
+
+<main>
+  <nav class="pills" role="tablist" aria-label="Capítulos">
+    <span class="lbl">Capítulo:</span>
+    <button class="pill" role="tab" data-t="tratamento">1. Tratamento</button>
+    <button class="pill" role="tab" data-t="funil">2. Funil</button>
+    <button class="pill" role="tab" data-t="recortes">3. Recortes</button>
+    <button class="pill" role="tab" data-t="padroes">4. Padrões</button>
+    <button class="pill" role="tab" data-t="hipoteses">5. Hipóteses e público</button>
+    <button class="pill" role="tab" data-t="experimento">6. Experimento da H1</button>
+    <button class="pill" role="tab" data-t="decisao">7. Decisão e escala</button>
+  </nav>
+
+  <!-- ========== 1 TRATAMENTO ========== -->
+  <section class="chap" id="tratamento" role="tabpanel">
+    <div class="card">
+      <h3>Highlights</h3>
+      <ul class="hl">
+        <li><span class="ic ok">✔</span><span class="ok">Base íntegra no essencial: IDs únicos, soma de produtos correta e nenhuma contratação antes do onboarding.</span></li>
+        <li><span class="ic info">◆</span><span class="info">Ativação = login nos primeiros dias: os dois campos coincidem em 3.595 de 3.600 clientes.</span></li>
+        <li><span class="ic warn">▲</span><span class="warn">Três leituras não são confiáveis nesta base: etapa da jornada, tempo até contratar e os scores como critério de decisão.</span></li>
+      </ul>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Clientes novos</div><div class="v">3.600</div><div class="s">entradas de mar a jul/2026</div></div>
+      <div class="kpi"><div class="k">Campos padronizados</div><div class="v">4</div><div class="s">região, perfil, renda, engajamento</div></div>
+      <div class="kpi"><div class="k">Inconsistências mapeadas</div><div class="v o">7</div><div class="s">documentadas e tratadas</div></div>
+      <div class="kpi"><div class="k">Fora dos públicos</div><div class="v">86</div><div class="s">acesso registrado sem nenhum acesso</div></div>
+    </div>
+    <div class="card">
+      <h3>Limpeza</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Campo</th><th>O que encontrei</th><th class="n">Registros</th><th>Tratamento</th></tr></thead>
+        <tbody>
+          <tr><td>regiao</td><td>“SUDESTE”, “sul”, “Nordeste ” com espaço</td><td class="n">62</td><td>Padronizado</td></tr>
+          <tr><td>perfil_cliente</td><td>Em branco</td><td class="n">55</td><td>Categoria “Não informado”</td></tr>
+          <tr><td>faixa_renda</td><td>Em branco (previsto no dicionário)</td><td class="n">217</td><td>Categoria “Não informado”</td></tr>
+          <tr><td>engajamento_score</td><td>Em branco</td><td class="n">104</td><td>Mantido em branco; médias ignoram</td></tr>
+          <tr><td>ativacao_digital</td><td>Diverge de login_primeiros_dias</td><td class="n">5</td><td>Login nos primeiros dias como definição de ativação</td></tr>
+        </tbody>
+      </table></div>
+      <p class="callout b">A janela de “primeiros dias” não está definida no dicionário. Assumi a 1ª semana, padrão de mercado para medir ativação. <b>Oportunidade de implementação de evento a considerar:</b> registrar a data do 1º login de cada cliente, para medir quando ele ativa de verdade e ajustar a janela.</p>
+    </div>
+    <div class="card">
+      <h3>Inconsistências e como tratei</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Inconsistência</th><th class="n">Registros</th><th>Decisão</th></tr></thead>
+        <tbody>
+          <tr><td>Acessou o app = Sim, mas 0 acessos e sem último acesso</td><td class="n">86</td><td>Grupo separado, fora dos públicos de teste</td></tr>
+          <tr><td>Etapa x comportamento: “Cadastro” com produto / ativados em “Cadastro” / “Fidelizado” com 0–1 produto</td><td class="n">263 / 15 / 47</td><td>Etapa não usada; uso login, acessos e produtos</td></tr>
+          <tr><td>Engajamento digital &gt; 0 para quem nunca acessou (o score acompanha o CTR das comunicações)</td><td class="n">566</td><td>Não decide: mistura app e comunicação e não prevê produto. Uso como estratificação na H1</td></tr>
+          <tr><td>Utilização &gt; 0 sem nenhum dos 3 produtos: ambíguo, o dicionário fala em produtos/serviços e quem usa Pix tem score maior</td><td class="n">871</td><td>Não escolhe público (repete nº de produtos, não prevê receita). Uso como métrica de qualidade da conversão na H2</td></tr>
+          <tr><td>Usa “Investimentos” sem conta / “Cartão Virtual” sem cartão</td><td class="n">219 / 241</td><td>Sinal de interesse a validar, não intenção comprovada</td></tr>
+          <tr><td>Perfil x idade implausível (aposentado até 34 anos, universitário 45+, jovem digital 55+)</td><td class="n">91</td><td>Sinalizado; leitura por perfil com cautela</td></tr>
+          <tr><td>Produtos por cliente iguais com 7 ou 150 dias de casa; o dia da contratação acompanha a janela observada</td><td class="n">—</td><td>Não uso “tempo até contratar”; só a ordem dos produtos</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="foot-nav"><span class="small">Próximo: onde a jornada perde clientes</span><button class="next" data-go="funil">Ir para o Funil</button></div>
+  </section>
+
+  <!-- ========== 2 FUNIL ========== -->
+  <section class="chap" id="funil" role="tabpanel">
+    <div class="card">
+      <h3>Highlights</h3>
+      <ul class="hl">
+        <li><span class="ic warn">▲</span><span class="warn">1.593 clientes (44%) não fazem login entre D0 e D7: é o maior vazamento da jornada.</span></li>
+        <li><span class="ic ok">✔</span><span class="ok">Quem ativa tem 1,48 produto contra 0,79 de quem não ativa, e 3,5x mais chance de ter 2+ produtos do que quem nunca acessou.</span></li>
+        <li><span class="ic warn">▲</span><span class="warn">Acessar depois da janela não recupera: o acesso tardio se comporta como quem nunca acessou.</span></li>
+      </ul>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Taxa de ativação</div><div class="v o">55,7%</div><div class="s">login de D0 a D7</div></div>
+      <div class="kpi"><div class="k">Não ativados</div><div class="v">1.593</div><div class="s">de 3.600 clientes</div></div>
+      <div class="kpi"><div class="k">Produtos/cliente</div><div class="v">1,48 <span style="font-size:20px;color:var(--muted)">vs 0,79</span></div><div class="s">ativado vs não ativado</div></div>
+      <div class="kpi"><div class="k">Multiproduto</div><div class="v">49% <span style="font-size:20px;color:var(--muted)">vs 16%</span></div><div class="s">2+ produtos, ativado vs não</div></div>
+    </div>
+    <div class="card">
+      <div class="prog-h"><b>Ativação digital dos clientes novos (login de D0 a D7)</b><span class="pct">55,7% ativados</span></div>
+      <div class="track"><div class="fill" style="width:55.7%"></div></div>
+      <div class="legend"><span><i style="background:var(--orange)"></i>Ativados: 2.007</span><span><i style="background:var(--bar2)"></i>Não ativados: 1.593</span><span>Quem entrou em cada mês, de março a julho, ativa na mesma taxa: o problema é estrutural, não depende do mês</span></div>
+    </div>
+    <div class="card funnel">
+      <h3>Funil da jornada</h3>
+      <div class="bars">
+        <div class="br"><span>Entraram na base</span><div class="t"><span class="g" style="width:100%">3.600</span></div><small>100%</small></div>
+        <div class="br"><span>Acessaram o app</span><div class="t"><span class="g" style="width:71.7%">2.581</span></div><small>71,7%</small></div>
+        <div class="br"><span>Login D0–D7</span><div class="t"><span style="width:55.7%">2.007</span></div><small>55,7% · perde 1.593</small></div>
+        <div class="br"><span>Ativados com 1+ produto</span><div class="t"><span class="g" style="width:48.5%">1.747</span></div><small>87% dos ativados</small></div>
+        <div class="br"><span>Ativados com 2+ produtos</span><div class="t"><span style="width:27.6%">993</span></div><small>57% dos com 1+</small></div>
+        <div class="br"><span>Ativados com 3 produtos</span><div class="t"><span class="g" style="width:6.1%;min-width:48px">221</span></div><small>6,1%</small></div>
+      </div>
+      <p class="callout">Os dois vazamentos em laranja viram as duas frentes da estratégia: ativação (H1) e 2º produto (H2).</p>
+      <p class="callout b"><b>Premissa:</b> considero “primeiros dias” como D0 a D7, do dia da entrada até o 7º dia. O dicionário não define a janela; a 1ª semana é o padrão de mercado para ativação e é a mesma janela da régua do teste.</p>
+    </div>
+    <div class="card">
+      <h3>O ponto de virada</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Grupo</th><th class="n">Clientes</th><th class="n">Produtos/cliente</th><th class="n">2+ produtos</th><th class="n">Conta invest.</th><th class="n">Seguro</th></tr></thead>
+        <tbody>
+          <tr class="on"><td>Login D0–D7</td><td class="n">2.007</td><td class="n">1,48</td><td class="n">49%</td><td class="n">60%</td><td class="n">31%</td></tr>
+          <tr><td>Acesso tardio</td><td class="n">490</td><td class="n">0,88</td><td class="n">19%</td><td class="n">11%</td><td class="n">25%</td></tr>
+          <tr><td>Nunca acessou</td><td class="n">1.019</td><td class="n">0,73</td><td class="n">14%</td><td class="n">11%</td><td class="n">34%</td></tr>
+        </tbody>
+      </table></div>
+      <p class="callout g">A conta investimento depende totalmente da jornada digital; o seguro não. Isso vai pesar na escolha de oferta.</p>
+    </div>
+    <div class="foot-nav"><button class="next ghost" data-go="tratamento">Voltar</button><button class="next" data-go="recortes">Ir para os Recortes</button></div>
+  </section>
+
+  <!-- ========== 3 RECORTES ========== -->
+  <section class="chap" id="recortes" role="tabpanel">
+    <div class="card">
+      <h3>Highlights</h3>
+      <ul class="hl">
+        <li><span class="ic ok">✔</span><span class="ok">O efeito do login aparece em todas as faixas de renda: +0,7 produto por cliente ativado.</span></li>
+        <li><span class="ic warn">▲</span><span class="warn">A não ativação se concentra em Agência (20%), Parceiro (30%) e Indicação (43%), contra 87% no App Próprio.</span></li>
+        <li><span class="ic info">◆</span><span class="info">Responder a uma comunicação está ligado a +20 p.p. de login em todos os canais: a mensagem certa move ativação.</span></li>
+      </ul>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Login nos primeiros dias, por canal</h3>
+        <div class="bars">
+          <div class="br"><span>App Próprio (1.164)</span><div class="t"><span class="gr" style="width:87%"></span></div><b>87%</b></div>
+          <div class="br"><span>Site (753)</span><div class="t"><span class="gr" style="width:61%"></span></div><b>61%</b></div>
+          <div class="br"><span>Indicação (637)</span><div class="t"><span style="width:43%"></span></div><b>43%</b></div>
+          <div class="br"><span>Parceiro (508)</span><div class="t"><span style="width:30%"></span></div><b>30%</b></div>
+          <div class="br"><span>Agência (538)</span><div class="t"><span style="width:20%"></span></div><b>20%</b></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Responder a uma comunicação x login, por canal</h3>
+        <div class="tbl"><table>
+          <thead><tr><th>Canal</th><th class="n">Login D0–D7 de quem respondeu a alguma comunicação</th><th class="n">Login D0–D7 de quem não respondeu</th><th class="n">Receita pot. a mais por cliente quando ativa</th></tr></thead>
+          <tbody>
+            <tr><td>Site</td><td class="n">78%</td><td class="n">54%</td><td class="n">+R$&nbsp;17</td></tr>
+            <tr class="on"><td>Indicação</td><td class="n">58%</td><td class="n">37%</td><td class="n">+R$&nbsp;32</td></tr>
+            <tr class="on"><td>Parceiro</td><td class="n">47%</td><td class="n">25%</td><td class="n">+R$&nbsp;34</td></tr>
+            <tr><td>Agência</td><td class="n">39%</td><td class="n">14%</td><td class="n">+R$&nbsp;18</td></tr>
+          </tbody>
+        </table></div>
+        <p class="small" style="margin-top:10px">Em todos os canais, quem responde a uma comunicação loga ~20 p.p. mais. Indicação e Parceiro: onde ativar mais vale.</p>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Controle por renda: produtos por cliente</h3>
+        <div class="tbl"><table>
+          <thead><tr><th>Faixa de renda</th><th class="n">Não ativado</th><th class="n">Ativado</th><th class="n">Diferença</th></tr></thead>
+          <tbody>
+            <tr><td>Até R$&nbsp;2.000</td><td class="n">0,56</td><td class="n">1,31</td><td class="n">+0,75</td></tr>
+            <tr><td>R$&nbsp;2.001–4.000</td><td class="n">0,65</td><td class="n">1,45</td><td class="n">+0,80</td></tr>
+            <tr><td>R$&nbsp;4.001–8.000</td><td class="n">0,78</td><td class="n">1,48</td><td class="n">+0,70</td></tr>
+            <tr><td>R$&nbsp;8.001–15.000</td><td class="n">0,95</td><td class="n">1,62</td><td class="n">+0,67</td></tr>
+            <tr><td>Acima de R$&nbsp;15.000</td><td class="n">1,05</td><td class="n">1,71</td><td class="n">+0,66</td></tr>
+          </tbody>
+        </table></div>
+        <p class="callout">~R$&nbsp;28 de receita potencial a mais por ativado (ponderado por renda). Uso como teto otimista: é diferença observada, não efeito causal.</p>
+      </div>
+      <div class="card">
+        <h3>Perfil e idade</h3>
+        <div class="bars">
+          <div class="br"><span>Universitário</span><div class="t"><span class="gr" style="width:77%"></span></div><b>77%</b></div>
+          <div class="br"><span>Jovem Digital</span><div class="t"><span class="gr" style="width:73%"></span></div><b>73%</b></div>
+          <div class="br"><span>Autônomo</span><div class="t"><span class="g" style="width:54%"></span></div><b>54%</b></div>
+          <div class="br"><span>Família Estabelecida</span><div class="t"><span class="g" style="width:47%"></span></div><b>47%</b></div>
+          <div class="br"><span>Aposentado</span><div class="t"><span style="width:28%"></span></div><b>28%</b></div>
+        </div>
+        <ul class="plain" style="margin-top:14px;font-size:15px">
+          <li>Aposentados são 41% da Agência e ativam 15% nela: pedem atendimento assistido ou uma jornada simplificada, não mais mensagem.</li>
+          <li>Ativação cai com a idade: 71% em 18–24 e 32% em 65+. Região não diferencia (50% a 61%).</li>
+          <li>Família Estabelecida e Autônomo têm a maior receita potencial média por cliente (R$&nbsp;166 e R$&nbsp;158).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-nav"><button class="next ghost" data-go="funil">Voltar</button><button class="next" data-go="padroes">Ir para os Padrões</button></div>
+  </section>
+
+  <!-- ========== 4 PADRÕES ========== -->
+  <section class="chap" id="padroes" role="tabpanel">
+    <div class="card">
+      <h3>Highlights</h3>
+      <ul class="hl">
+        <li><span class="ic warn">▲</span><span class="warn">Todos recebem ~12 comunicações, ativados ou não. Entre não ativados, mais volume sobe a resposta, mas não muda produto.</span></li>
+        <li><span class="ic ok">✔</span><span class="ok">Depois do cartão, o caminho natural é a conta investimento (61%). O seguro é o produto que mais vale (+R$&nbsp;66).</span></li>
+        <li><span class="ic info">◆</span><span class="info">O login sozinho não gera receita: o valor vem dos produtos que ele destrava.</span></li>
+      </ul>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Comunicações por cliente</div><div class="v">~12</div><div class="s">iguais para ativados e não ativados; não crescem com o tempo de casa</div></div>
+      <div class="kpi"><div class="k">CTR não ativados</div><div class="v o">8%</div><div class="s">contra 19% dos ativados</div></div>
+      <div class="kpi"><div class="k">Cartão → 2º produto</div><div class="v">61%</div><div class="s">de quem começou pelo cartão foi para a conta investimento</div></div>
+      <div class="kpi"><div class="k">Valor do seguro</div><div class="v">+R$&nbsp;66</div><div class="s">por cliente, controlando renda e perfil</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Volume de comunicação x resultado (não ativados)</h3>
+        <div class="tbl"><table>
+          <thead><tr><th>Recebidas</th><th class="n">Clientes</th><th class="n">CTR</th><th class="n">Respondeu</th><th class="n">2+ produtos</th></tr></thead>
+          <tbody>
+            <tr><td>0–5</td><td class="n">180</td><td class="n">6,3%</td><td class="n">7,8%</td><td class="n">15,6%</td></tr>
+            <tr><td>6–10</td><td class="n">474</td><td class="n">9,1%</td><td class="n">11,6%</td><td class="n">15,0%</td></tr>
+            <tr><td>11–15</td><td class="n">474</td><td class="n">7,3%</td><td class="n">21,9%</td><td class="n">17,9%</td></tr>
+            <tr><td>16–20</td><td class="n">465</td><td class="n">7,6%</td><td class="n">25,6%</td><td class="n">15,3%</td></tr>
+          </tbody>
+        </table></div>
+        <p class="callout">Leitura: o problema não é frequência, é conteúdo e momento. A mensagem engaja, mas não leva a uma ação concreta.</p>
+      </div>
+      <div class="card">
+        <h3>Valor de cada produto</h3>
+        <div class="bars">
+          <div class="br"><span>Seguro</span><div class="t"><span style="width:100%"></span></div><b>R$&nbsp;66</b></div>
+          <div class="br"><span>Cartão</span><div class="t"><span class="g" style="width:59%"></span></div><b>R$&nbsp;39</b></div>
+          <div class="br"><span>Conta invest.</span><div class="t"><span class="g" style="width:59%"></span></div><b>R$&nbsp;39</b></div>
+          <div class="br"><span>Login sozinho</span><div class="t"><span class="g" style="width:1%"></span></div><b>≈ 0</b></div>
+        </div>
+        <p class="small" style="margin-top:10px">Regressão da receita potencial controlando renda e perfil.</p>
+        <div class="tbl" style="margin-top:12px"><table>
+          <thead><tr><th>Ativados que hoje têm só cartão (309)</th><th class="n">Receita pot. média</th></tr></thead>
+          <tbody>
+            <tr><td>Só cartão</td><td class="n">R$&nbsp;98</td></tr>
+            <tr><td>Cartão + conta investimento</td><td class="n">R$&nbsp;123</td></tr>
+            <tr class="on"><td>Cartão + seguro</td><td class="n">R$&nbsp;201</td></tr>
+            <tr><td>Cartão + conta + seguro</td><td class="n">R$&nbsp;268</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Ordem natural de contratação e adesão por perfil</h3>
+      <div class="grid3">
+        <div><h4>Do 1º para o 2º produto</h4><ul class="plain" style="font-size:15px"><li>Cartão → conta 61% · seguro 39%</li><li>Conta → cartão 69% · seguro 31%</li><li>Seguro → cartão 55% · conta 45%</li></ul></div>
+        <div><h4>Seguro cresce com a renda</h4><p style="font-size:15px">Entre quem tem cartão: 15–19% de adesão até R$&nbsp;4 mil; 45–52% acima de R$&nbsp;8 mil. A conta fica estável (~42–47%).</p></div>
+        <div><h4>Jovens puxam para a conta</h4><p style="font-size:15px">Universitário e Jovem Digital: ~55% com conta investimento entre quem tem cartão.</p></div>
+      </div>
+      <p class="callout b">Duas rotas para o 2º produto: a conta investimento é o caminho mais natural e tende a converter mais; o seguro gera cerca de 4x mais receita por cliente que contrata. Em vez de escolher por intuição, a proposta é testar as duas ofertas e decidir pela receita.</p>
+    </div>
+    <div class="foot-nav"><button class="next ghost" data-go="recortes">Voltar</button><button class="next" data-go="hipoteses">Ir para as Hipóteses</button></div>
+  </section>
+
+  <!-- ========== 5 HIPÓTESES ========== -->
+  <section class="chap" id="hipoteses" role="tabpanel">
+    <div class="card">
+      <h3>Problema e oportunidade</h3>
+      <p style="font-size:19px;font-weight:700;max-width:80ch">Quase metade dos clientes novos não passa da porta digital, e é nos primeiros dias que o valor se decide. A comunicação atual trata igual quem ativou e quem não ativou, e mais volume não resolve.</p>
+      <ul class="hl" style="margin-top:12px">
+        <li><span class="ic warn">▲</span><span class="warn">Problema: 44% não ativam, concentrados em Indicação, Parceiro e Agência.</span></li>
+        <li><span class="ic info">◆</span><span class="info">Comunicação: todos recebem ~12 mensagens, independentemente do tempo de casa. A régua de boas-vindas atual não está gerando ativação.</span></li>
+        <li><span class="ic ok">✔</span><span class="ok">Oportunidade: ativar destrava +0,7 produto por cliente, principalmente a conta investimento.</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Roteiro do desafio: onde cada ponto é respondido</h3>
+      <ul class="check">
+        <li>Problema ou oportunidade: <a data-go="hipoteses">este capítulo</a>, sustentado por <a data-go="funil">Funil</a> e <a data-go="recortes">Recortes</a></li>
+        <li>Hipóteses priorizadas e por quê: <a data-go="hipoteses">este capítulo</a></li>
+        <li>Público priorizado: <a data-go="hipoteses">este capítulo</a></li>
+        <li>Experiência ou etapa testada: <a data-go="hipoteses">este capítulo</a></li>
+        <li>Estrutura do experimento: <a data-go="experimento">Experimento da H1</a></li>
+        <li>Métricas: <a data-go="experimento">Experimento da H1</a></li>
+        <li>Critério de vitória: <a data-go="decisao">Decisão e escala</a></li>
+        <li>Ação para resultado positivo, neutro ou negativo: <a data-go="decisao">Decisão e escala</a></li>
+        <li>Como escalar: <a data-go="decisao">Decisão e escala</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Hipóteses priorizadas (ICE)</h3>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Hipótese</th><th>Público</th><th class="n">Impacto</th><th class="n">Confiança</th><th class="n">Facilidade</th><th class="n">ICE</th><th>Papel</th></tr></thead>
+        <tbody>
+          <tr class="on"><td><b>H1</b></td><td>Régua de onboarding (boas-vindas em D0 + lembretes D2–D7) com objetivo cadastro + 1º produto aumenta o login na 1ª semana e a contratação</td><td>P2 + P3</td><td class="n">5</td><td class="n">3</td><td class="n">3</td><td class="n">45</td><td><span class="tag o">Aposta principal</span></td></tr>
+          <tr class="on"><td><b>H2</b></td><td>Push contextual com o próximo produto aumenta o 2º produto</td><td>P1</td><td class="n">4</td><td class="n">4</td><td class="n">5</td><td class="n">80</td><td><span class="tag">Quick win</span></td></tr>
+          <tr><td><b>H3</b></td><td>Enxugar a jornada: menos mensagens genéricas e mais gatilho por comportamento, com canais sem custo primeiro, mantém o resultado com menos custo e desgaste</td><td>Não ativados</td><td class="n">3</td><td class="n">3</td><td class="n">4</td><td class="n">36</td><td><span class="tag b">Eficiência</span></td></tr>
+          <tr><td><b>H4</b></td><td>Gerente faz o 1º login junto com o cliente</td><td>P4</td><td class="n">3</td><td class="n">2</td><td class="n">2</td><td class="n">12</td><td><span class="tag b">Piloto</span></td></tr>
+          <tr><td><b>H5</b></td><td>Retomada em até 24h para quem abandonou a contratação</td><td>Abandono</td><td colspan="4" class="small">Depende de implementar o evento de abandono</td><td><span class="tag b">Roadmap</span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="callout">Por que a H1 é a aposta principal, mesmo com ICE menor que a H2: o ICE mostra o que é mais fácil e rápido de executar, não o que é mais importante. A H1 tem o maior impacto, ataca o maior gap da jornada e responde à pergunta do case: a jornada de quem ainda não entrou. A H2 tem ICE maior porque é fácil e sem custo, então roda em paralelo como quick win, sem disputar público.</p>
+      <div class="tbl" style="margin-top:14px"><table>
+        <thead><tr><th>Critério</th><th>O que mede</th><th>Nota 1</th><th>Nota 5</th></tr></thead>
+        <tbody>
+          <tr><td><b>Impacto</b></td><td>Tamanho do ganho se a hipótese se confirmar: quantos clientes são afetados × quanto valor está em jogo</td><td>Público pequeno ou pouco valor</td><td>Maior gap da jornada, muitos clientes e alto valor</td></tr>
+          <tr><td><b>Confiança</b></td><td>Quanto a base sustenta a hipótese</td><td>Intuição, sem sinal nos dados</td><td>Sinal forte e consistente em vários recortes</td></tr>
+          <tr><td><b>Facilidade</b></td><td>Esforço para colocar no ar: custo, canais e dependência de produto ou tecnologia</td><td>Mais difícil: custo alto, precisa de desenvolvimento ou de outras áreas</td><td>Mais fácil: sem custo, canais que já existem, só CRM</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small" style="margin-top:8px">ICE = Impacto × Confiança × Facilidade (máximo 125). Quanto mais perto de 5 em cada nota, melhor.</p>
+      <p class="callout g"><b>Estratégia de canais em todas as hipóteses:</b> hoje todos recebem ~12 mensagens e mais volume não vira produto. Por isso a esteira enxuga a jornada: menos mensagens, cada uma com uma ação concreta, começando pelos canais sem custo (push, SMS, banner e in-app). O WhatsApp, que engaja mais mas custa R$&nbsp;0,40 por mensagem, entra como variante do teste e só escala onde provar que se paga.</p>
+    </div>
+    <div class="card">
+      <h3>Da hipótese à ação</h3>
+      <p class="small" style="margin-bottom:14px">Cada hipótese vira uma ação concreta e uma forma de medir, com público, canal e times envolvidos.</p>
+
+      <div class="hx">
+        <div class="hy"><div class="lb">H1 · Aposta principal</div><p>Se os clientes novos de Indicação, Parceiro e Site receberem uma régua de onboarding que os leva a se cadastrar no app e a contratar o 1º produto, o login de D0 a D7 e a contratação aumentam, porque hoje a comunicação é genérica e não leva a uma ação.</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ac"><div class="lb">Ação</div><p>Régua de onboarding com duas metas em sequência: <b>cadastro no app</b> (boas-vindas em D0 e lembretes em D2, D4 e D7) e <b>1º produto</b> (in-app após o 1º login). Uma ação por mensagem, com deep link. Teste com 3 grupos: controle, SMS e WhatsApp.</p><p style="margin-top:6px"><a class="next" style="display:inline-block;padding:6px 14px;font-size:14px;text-decoration:none" data-go="experimento" href="#experimento">Ver o desenho completo</a></p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ms"><div class="lb">Como vamos medir</div><ul><li><b>Primária:</b> % de login até D7</li><li><b>Contratação:</b> % com 1º produto em D30</li><li><b>Originação por produto</b> em D30/D60: cartão, conta e seguro</li><li><b>CAC da ativação:</b> custo da régua ÷ ativações a mais</li><li><b>Engajamento:</b> entrega, leitura, CTR, cadastro no app e 1ª ação</li><li><b>Guardrails:</b> opt-out e bloqueio</li></ul></div>
+        <div class="meta"><span><b>Público:</b> P2 + P3</span><span><b>Canal:</b> SMS e in-app (sem custo); WhatsApp como variante</span><span><b>Times:</b> CRM, Produto/App (deep links e tela inicial), Dados (sorteio e evento de 1º login)</span></div>
+      </div>
+
+      <div class="hx">
+        <div class="hy"><div class="lb">H2 · Quick win</div><p>Se os ativados com 0–1 produto receberem a próxima melhor oferta no momento certo, a contratação do 2º produto aumenta.</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ac"><div class="lb">Ação</div><p>Push, banner e in-app com a oferta do produto que falta. Teste com 3 grupos: controle, conta investimento e seguro.</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ms"><div class="lb">Como vamos medir</div><ul><li><b>Primária:</b> receita potencial a mais por tratado em D30</li><li><b>Originação por produto:</b> conversão em conta e em seguro</li><li><b>Qualidade:</b> utilização do produto contratado</li><li><b>Engajamento:</b> CTR do push e clique no banner</li><li><b>Guardrails:</b> canibalização e opt-out de push</li></ul></div>
+        <div class="meta"><span><b>Público:</b> P1</span><span><b>Canal:</b> push, banner e in-app (sem custo)</span><span><b>Times:</b> CRM, Produto (vitrine e banner), times de Seguros e Investimentos (oferta e condições), Jurídico (copys)</span></div>
+      </div>
+
+      <div class="hx">
+        <div class="hy"><div class="lb">H3 · Eficiência</div><p>Se trocarmos parte das ~12 mensagens genéricas por menos mensagens disparadas por comportamento, o resultado se mantém com menos custo e menos desgaste.</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ac"><div class="lb">Ação</div><p>Teste de não inferioridade: volume atual x régua enxuta com gatilhos (não logou, logou sem 1ª ação, abriu a área de um produto).</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ms"><div class="lb">Como vamos medir</div><ul><li><b>Primária:</b> produtos por cliente em D60, sem queda</li><li><b>Custo:</b> custo de comunicação por cliente e CAC da ativação</li><li><b>Engajamento:</b> CTR e resposta por mensagem</li><li><b>Guardrails:</b> login até D7 não cai mais de 1 p.p.; opt-out cai</li></ul></div>
+        <div class="meta"><span><b>Público:</b> não ativados</span><span><b>Canal:</b> todos</span><span><b>Times:</b> CRM, Dados (gatilhos de comportamento)</span></div>
+      </div>
+
+      <div class="hx">
+        <div class="hy"><div class="lb">H4 · Piloto</div><p>Se os aposentados que entram pela Agência tiverem ajuda no 1º acesso ou uma jornada mais simples, a ativação deles aumenta sem perder o seguro.</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ac"><div class="lb">Ação</div><p>Piloto em algumas agências, com o gerente fazendo o 1º login junto com o cliente. Em paralelo, levar ao time de Produto/UX uma proposta de jornada simplificada para esse perfil.</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ms"><div class="lb">Como vamos medir</div><ul><li><b>Primária:</b> % de login até D7 dos aposentados de Agência</li><li><b>Originação por produto,</b> com o seguro estável</li><li><b>Custo:</b> custo de atendimento por cliente ativado</li><li><b>Engajamento:</b> acessos em 30 dias</li><li><b>Guardrails:</b> reclamações e tempo de atendimento</li></ul></div>
+        <div class="meta"><span><b>Público:</b> P4</span><span><b>Canal:</b> atendimento assistido</span><span><b>Times:</b> Agências/Operações, Produto/UX, Treinamento</span></div>
+      </div>
+
+      <div class="hx">
+        <div class="hy"><div class="lb">H5 · Roadmap</div><p>Se quem começa e abandona a contratação de um produto receber uma retomada em até 24h, a conversão daquele produto aumenta.</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ac"><div class="lb">Ação</div><p>1º passo: implementar os eventos de início e abandono de contratação. Depois, régua de retomada por push e in-app, com SMS para quem não tem push.</p></div>
+        <div class="ar" aria-hidden="true">→</div>
+        <div class="ms"><div class="lb">Como vamos medir</div><ul><li><b>Primária:</b> % que conclui a contratação em até 7 dias</li><li><b>Originação recuperada</b> por produto</li><li><b>Valor:</b> receita potencial recuperada</li><li><b>Engajamento:</b> abertura e clique da retomada</li><li><b>Guardrails:</b> opt-out</li></ul></div>
+        <div class="meta"><span><b>Público:</b> quem abandonou a contratação</span><span><b>Canal:</b> push, in-app e SMS</span><span><b>Times:</b> Produto/Engenharia (eventos), Dados, CRM</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Esteira com outros times: onde cada um ajuda a melhorar a jornada</h3>
+      <div class="grid3">
+        <div><h4>Produto e UX</h4><p>Mapear onde o cliente trava entre baixar o app, se cadastrar e fazer o 1º login; deep links, tela “Comece por aqui” e jornada simplificada para quem tem baixa propensão digital.</p></div>
+        <div><h4>Dados e Engenharia</h4><p>Implementar os eventos que faltam (data do 1º login, início e abandono de contratação, entrega e leitura por canal) e garantir o sorteio dos grupos.</p></div>
+        <div><h4>Canais de entrada</h4><p>Com Agências e Parceiros, levar o convite para o app ao momento da contratação, por exemplo com link ou QR code entregue na hora.</p></div>
+        <div><h4>Produtos (Seguros e Investimentos)</h4><p>Definir a oferta, as condições e a regra de próxima melhor oferta por perfil.</p></div>
+        <div><h4>Jurídico e Compliance</h4><p>Validar copys, benefícios e a categoria das mensagens de WhatsApp.</p></div>
+        <div><h4>Ritual</h4><p>Encontro quinzenal entre CRM, Produto e Dados para revisar os resultados, repriorizar o backlog pelo ICE e decidir o próximo teste.</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Público priorizado</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Público</th><th class="n">Clientes</th><th>Situação</th><th>Canal que alcança</th></tr></thead>
+        <tbody>
+          <tr class="on"><td>P3 Nunca acessou (Indicação, Parceiro, Site)</td><td class="n">626</td><td>42% sem nenhum produto</td><td>SMS <span class="tag">sem custo</span> · WhatsApp, RCS <span class="tag o">pago</span></td></tr>
+          <tr class="on"><td>P2 Acesso tardio (Indicação, Parceiro, Site)</td><td class="n">335</td><td>Tem o app, perdeu a janela</td><td>Push, in-app, SMS <span class="tag">sem custo</span></td></tr>
+          <tr><td>P1 Ativado com 0–1 produto</td><td class="n">1.014</td><td>Engajado (CTR 18%), falta o 2º produto</td><td>Push, banner, in-app <span class="tag">sem custo</span></td></tr>
+          <tr><td>P4 Não ativado de Agência</td><td class="n">430</td><td>Aposentados, baixa propensão digital</td><td>Atendimento assistido</td></tr>
+          <tr><td>P5 Não ativado do App</td><td class="n">150</td><td>Pequeno: o app já ativa 87%</td><td>Push</td></tr>
+        </tbody>
+      </table></div>
+      <p class="callout b">Por que P2 + P3: maior gap de ativação nos canais onde ativar mais vale (Indicação e Parceiro) e público sem app, onde a jornada digital realmente falha. Agência fica fora porque pede outra abordagem; App Próprio, porque já ativa 87%.</p>
+    </div>
+    <div class="card">
+      <h3>Experiência e etapa testadas</h3>
+      <div class="grid3">
+        <div><h4>Etapa</h4><p>Da entrada ao cadastro no app e ao 1º produto: os primeiros 7 dias, onde a jornada perde 44% dos clientes, mais o 1º produto logo após o login.</p></div>
+        <div><h4>Experiência</h4><p>Trocar a comunicação genérica por boas-vindas que levam ao cadastro no app e por uma régua com uma 1ª ação concreta por mensagem (ativar o cartão virtual, fazer o 1º Pix), com deep link para a tela exata.</p></div>
+        <div><h4>Por que essa ação</h4><p>Cartão virtual e Pix são as funcionalidades mais usadas por quem ativa e geram uso no mesmo dia.</p></div>
+      </div>
+    </div>
+    <div class="foot-nav"><button class="next ghost" data-go="padroes">Voltar</button><button class="next" data-go="experimento">Ir para o Experimento da H1</button></div>
+  </section>
+
+  <!-- ========== 6 EXPERIMENTO ========== -->
+  <section class="chap" id="experimento" role="tabpanel">
+    <div class="card">
+      <h3>Aprofundando a H1, a aposta principal</h3>
+      <p style="font-size:17px;margin:0">Se os clientes novos de Indicação, Parceiro e Site receberem uma régua de onboarding que os leva a se cadastrar no app e a contratar o 1º produto, o login de D0 a D7 e a contratação aumentam. Aqui está como eu testaria: grupos, amostra, régua, copys e métricas.</p>
+      <p class="callout b">O público é definido pelo comportamento (não fez login), e não pela etapa da jornada: 263 dos 763 clientes em “Cadastro” já têm produto e receberiam uma mensagem errada.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Grupos</div><div class="v">3</div><div class="s">controle, SMS e WhatsApp, cada um com 1/3 dos sorteados</div></div>
+      <div class="kpi"><div class="k">Clientes por grupo</div><div class="v">612</div><div class="s">para enxergar uma melhora de 8 p.p. no login (de ~47% para ~55%)</div></div>
+      <div class="kpi"><div class="k">Duração mínima</div><div class="v">2 sem.</div><div class="s">de entradas completas; login lido em D7 e produtos em D30</div></div>
+      <div class="kpi"><div class="k">Custo WhatsApp</div><div class="v o">R$&nbsp;1,20</div><div class="s">por cliente: 3 mensagens de marketing × R$&nbsp;0,40</div></div>
+    </div>
+    <div class="card">
+      <h3>Como ler o tamanho da amostra</h3>
+      <p>Hoje, cerca de 47% dos clientes desses canais fazem login de D0 a D7. Para afirmar com segurança que a nova jornada levou esse número para ~55% (+8 p.p.), cada grupo precisa de 612 clientes. Com isso, há 95% de confiança de que a diferença não é sorte (significância de 5%) e 80% de chance de enxergar a melhora se ela existir (poder de 80%).</p>
+      <p class="callout">No volume desta base (~380 clientes por mês nesses canais), os 3 grupos levariam cerca de 21 semanas. Se o volume real for parecido, começo com controle x SMS e o WhatsApp entra numa 2ª onda.</p>
+    </div>
+    <div class="card">
+      <h3>Grupos do teste</h3>
+      <div class="grid3">
+        <div><span class="tag b">A · Controle · 1/3</span><p style="margin-top:8px">Recebe a comunicação atual. É a referência para medir o efeito da jornada nova.</p></div>
+        <div><span class="tag">B · Sem custo · 1/3</span><p style="margin-top:8px">Boas-vindas por SMS em D0, lembretes por SMS em D2, D4 e D7 e in-app guiando a 1ª ação.</p></div>
+        <div><span class="tag o">C · Pago · 1/3</span><p style="margin-top:8px">Boas-vindas por SMS em D0, lembretes por WhatsApp em D2, D4 e D7 e o mesmo in-app.</p></div>
+      </div>
+      <p class="callout b">Divisão igual entre os 3 grupos porque é a forma de comparar todos entre si com o menor número total de clientes. Sorteio na entrada (D0), equilibrado por canal e por engajamento. Análise por intenção de tratar: comparo todos os sorteados, e não só quem recebeu mensagem, para que a única diferença entre os grupos seja a jornada. Os 86 clientes com acesso inconsistente ficam fora.</p>
+    </div>
+    <div class="card">
+      <h3>A régua dia a dia: o que o cliente recebe e o que queremos que ele faça</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Dia</th><th>Quem recebe</th><th>Mensagem (B: SMS · C: WhatsApp)</th><th>Ação que queremos do cliente</th><th>Como sei que funcionou</th></tr></thead>
+        <tbody>
+          <tr><td><b>D0</b></td><td>Todos dos grupos B e C</td><td>Boas-vindas: conta pronta + link para baixar o app (SMS nos dois grupos)</td><td><b>Baixar o app e fazer o cadastro</b></td><td>Instalação e cadastro concluído</td></tr>
+          <tr><td><b>D2</b></td><td>Só quem ainda não fez login</td><td>Ativar o cartão virtual em 1 minuto e usar nas compras online</td><td><b>Fazer o 1º login e ativar o cartão virtual</b></td><td>Login e ativação do cartão virtual</td></tr>
+          <tr><td><b>D4</b></td><td>Só quem ainda não fez login</td><td>Fazer o 1º Pix pelo app em menos de 1 minuto</td><td><b>Fazer o 1º login e o 1º Pix</b></td><td>Login e 1º Pix</td></tr>
+          <tr><td><b>D7</b></td><td>Só quem ainda não fez login</td><td>Último lembrete: cartão, Pix e conta já liberados, falta só entrar</td><td><b>Fazer o 1º login</b></td><td>Login até D7 (métrica primária)</td></tr>
+          <tr><td><b>1º login</b></td><td>Quem entra no app, grupos B e C</td><td>In-app “Comece por aqui” com uma única próxima ação</td><td><b>Concluir a 1ª ação no mesmo dia</b></td><td>1ª ação concluída</td></tr>
+          <tr><td><b>Após o 1º login</b></td><td>Quem entrou e ainda não tem produto, grupos B e C</td><td>In-app e push com o 1º produto mais aderente ao perfil (cartão como porta de entrada)</td><td><b>Contratar o 1º produto</b></td><td>% com 1º produto em D30</td></tr>
+          <tr><td><b>D30 / D60</b></td><td>Todos os sorteados</td><td>Sem mensagem nova: é a leitura de resultado</td><td>—</td><td>Produtos contratados e receita potencial</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small" style="margin-top:8px">Quem faz login em qualquer momento sai dos lembretes e passa para a jornada de próximo produto (H2).</p>
+    </div>
+    <div class="card">
+      <h3>Boas-vindas e cadastro no app: levar para o digital quem ainda não tem o app</h3>
+      <div class="grid3">
+        <div><h4>1. Dar as boas-vindas</h4><p>Em D0, uma mensagem curta confirma que a conta está pronta e traz o link para baixar o app e fazer o cadastro.</p></div>
+        <div><h4>2. Entender quem é o cliente</h4><p>Canal de entrada e perfil definem o benefício que aparece primeiro: Pix e cartão virtual para jovens e universitários; organização e proteção para famílias e autônomos.</p></div>
+        <div><h4>3. Levar a uma ação concreta</h4><p>No 1º login, o in-app mostra uma única próxima ação, com deep link para a tela exata.</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Copys da régua</h3>
+      <h4>Grupo B · SMS</h4>
+      <div class="msgs">
+        <div class="msg"><div class="c">SMS · D0 · boas-vindas</div>[Marca]: boas-vindas! Sua conta está pronta. Baixe o app e faça seu cadastro em 2 minutos: [link]</div>
+        <div class="msg"><div class="c">SMS · D2</div>[Marca]: sua conta está pronta. Ative seu cartão virtual em 1 minuto e já use nas compras online: [link]</div>
+        <div class="msg"><div class="c">SMS · D4</div>[Marca]: que tal fazer seu 1º Pix pelo app? Leva menos de 1 minuto: [link]</div>
+        <div class="msg"><div class="c">SMS · D7</div>[Marca]: falta só entrar no app para liberar seu cartão, Pix e conta. Seu acesso: [link]</div>
+      </div>
+      <h4 style="margin-top:18px">Grupo C · WhatsApp (D0 por SMS, igual ao grupo B)</h4>
+      <div class="msgs">
+        <div class="msg wa"><div class="c">WhatsApp · D2</div>Oi, {nome}! Sua conta na [Marca] já está pronta. Em 1 minuto você ativa seu cartão virtual e já pode usar nas compras online.<br><span class="btn">Ativar cartão virtual</span><span class="btn">Falar com alguém</span></div>
+        <div class="msg wa"><div class="c">WhatsApp · D4</div>Oi, {nome}! Que tal fazer seu primeiro Pix pelo app? É rápido: leva menos de 1 minuto.<br><span class="btn">Fazer meu 1º Pix</span><span class="btn">Falar com alguém</span></div>
+        <div class="msg wa"><div class="c">WhatsApp · D7</div>Oi, {nome}! Seu cartão virtual, o Pix e a conta já estão liberados. Falta só entrar no app pela primeira vez.<br><span class="btn">Entrar no app</span><span class="btn">Preciso de ajuda</span></div>
+        <div class="msg"><div class="c">In-app · 1º login (B e C)</div><b>Comece por aqui</b><br>Ative seu cartão virtual e use hoje mesmo.<br><span class="btn">Ativar cartão</span></div>
+      </div>
+      <ul class="plain" style="margin-top:14px;font-size:15px">
+        <li>Uma ação por mensagem, com deep link para a tela exata.</li>
+        <li>Mesmo conteúdo no SMS e no WhatsApp: o teste mede o canal, não a copy. O teste de copy (benefício x urgência, por perfil) fica para a 2ª onda.</li>
+      </ul>
+      <p class="callout b"><b>Possibilidade para baixar o custo do WhatsApp:</b> enviar as mensagens como templates de utilidade em vez de marketing, que a Meta cobra mais barato. Ressalva: a categoria é aprovada pela Meta, e mensagens com tom de oferta ou incentivo podem ser reclassificadas como marketing. O texto teria de ser estritamente informativo sobre a conta (por exemplo, “sua conta está pronta”), o que pode reduzir o engajamento. Vale testar depois que o canal provar valor.</p>
+      <p class="small" style="margin-top:8px">Copys ilustrativas, com SMS abaixo de 160 caracteres; benefícios e prazos a validar com produto e jurídico.</p>
+    </div>
+    <div class="card">
+      <h3>Métricas</h3>
+      <div class="grid3">
+        <div><span class="tag o">Primária</span><p style="margin-top:8px"><b>% de login até D7</b>, por intenção de tratar.</p></div>
+        <div><span class="tag b">Secundárias</span><p style="margin-top:8px"><b>% com 1º produto em D30</b>; <b>originação por produto</b> em D30/D60 (cartão, conta e seguro), % com 2+ produtos, receita potencial por tratado e <b>CAC da ativação</b> (custo da régua ÷ ativações a mais). <b>Engajamento:</b> entrega, leitura, CTR, cadastro no app e 1ª ação concluída.</p></div>
+        <div><span class="tag">Guardrails</span><p style="margin-top:8px">Opt-out e bloqueio no WhatsApp, descadastro de SMS, reclamações e o seguro não cair.</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Como leio as métricas da comunicação</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Etapa</th><th>Métrica</th><th>Se estiver baixa</th><th>O que mexo</th></tr></thead>
+        <tbody>
+          <tr><td>Entrega</td><td>% entregue</td><td>Telefone ou opt-in ruins</td><td>Qualidade de cadastro; canal alternativo</td></tr>
+          <tr><td>Leitura</td><td>% lida / aberta</td><td>Remetente, horário, prévia</td><td>Horário de envio, 1ª linha da mensagem</td></tr>
+          <tr><td>Clique</td><td>CTR (hoje: 8% nos não ativados)</td><td>Leu e não clicou: copy ou oferta fracas</td><td>Benefício, CTA, personalização</td></tr>
+          <tr><td>Ação</td><td>Login / 1ª ação após o clique</td><td>Clicou e não entrou: fricção</td><td>Deep link, senha, app não instalado</td></tr>
+          <tr><td>Valor</td><td>Produto e receita em D30/D60</td><td>Entrou e não contratou: ativação vazia</td><td>Acoplar a próxima melhor oferta (H2)</td></tr>
+          <tr><td>Custo e desgaste</td><td>Custo por ativação incremental; opt-out</td><td>Opt-out alto: frequência ou relevância</td><td>Reduzir toques; testar H3</td></tr>
+        </tbody>
+      </table></div>
+      <p class="callout">Abertura e clique diagnosticam; a decisão é sempre pela primária e pelo valor. Um braço pode ter CTR maior e perder em login.</p>
+    </div>
+    <div class="card">
+      <h3>Quick win em paralelo: H2, próxima melhor oferta</h3>
+      <div class="grid2">
+        <div>
+          <div class="tbl"><table>
+            <thead><tr><th>Braço</th><th>Oferta</th><th class="n">Conversão (premissa)</th><th class="n">Receita por tratado</th></tr></thead>
+            <tbody>
+              <tr><td>A</td><td>Comunicação atual</td><td class="n">—</td><td class="n">—</td></tr>
+              <tr><td>B</td><td>Conta investimento</td><td class="n">10%</td><td class="n">R$&nbsp;2,48</td></tr>
+              <tr class="on"><td>C</td><td>Seguro</td><td class="n">5%</td><td class="n">R$&nbsp;5,15</td></tr>
+            </tbody>
+          </table></div>
+          <p class="callout g">Se a conta converter 10%, o seguro só precisa converter 2,4% para empatar em receita.</p>
+          <p class="small" style="margin-top:10px">Primária: receita potencial incremental por tratado em D30. Secundária: score de utilização do produto contratado (contratou e usa x contratou e largou). Guardrails: canibalização e opt-out de push.</p>
+        </div>
+        <div class="msgs" style="grid-template-columns:1fr">
+          <div class="msg"><div class="c">Push · B, quem usa a área de investimentos</div><b>Seu dinheiro pode render</b><br>Abra sua conta investimento em 2 minutos, direto no app.</div>
+          <div class="msg"><div class="c">Push · B, demais</div><b>Pix, pagamentos e cartão num lugar só</b><br>Abra sua conta digital e organize seu dia a dia.</div>
+          <div class="msg"><div class="c">Push · C</div><b>Proteção para quem depende de você</b><br>Veja quanto custa seu seguro de vida. Leva 1 minuto.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Resumo do experimento</h3>
+      <ul class="hl">
+        <li><span class="ic info">◆</span><span class="info">Sorteio na entrada (D0), equilibrado por canal. Boas-vindas em D0 levam o cliente para o app; os lembretes de D2 a D7 só vão para quem ainda não fez login.</span></li>
+        <li><span class="ic ok">✔</span><span class="ok">Grupo B, sem custo (SMS + in-app), é a base escalável; o grupo C (WhatsApp) precisa provar que se paga.</span></li>
+        <li><span class="ic warn">▲</span><span class="warn">612 clientes por grupo; no volume desta base, ~21 semanas. Plano B: começar com controle x SMS.</span></li>
+      </ul>
+    </div>
+    <div class="foot-nav"><button class="next ghost" data-go="hipoteses">Voltar</button><button class="next" data-go="decisao">Ir para Decisão e escala</button></div>
+  </section>
+
+  <!-- ========== 7 DECISÃO ========== -->
+  <section class="chap" id="decisao" role="tabpanel">
+    <div class="card">
+      <h3>O que faço com cada resultado</h3>
+      <div class="tbl"><table class="dec">
+        <thead><tr><th>Resultado</th><th>Leitura</th><th>Próximo passo</th></tr></thead>
+        <tbody>
+          <tr class="on"><td>Positivo: B vence</td><td>A mensagem certa resolve, sem custo</td><td>Escalar SMS + in-app para todos os canais não digitais</td></tr>
+          <tr class="on"><td>Positivo: C vence B por ≥ 4,3 p.p.</td><td>O WhatsApp se paga</td><td>WhatsApp onde o valor é maior: Indicação, Parceiro, renda alta</td></tr>
+          <tr><td>Login sobe, produto não</td><td>Ativação vazia</td><td>Acoplar a H2 logo após o login</td></tr>
+          <tr><td>Neutro</td><td>Não é lembrete, é fricção</td><td>Testar onboarding assistido e outra 1ª ação; ler por canal, com recorte definido antes</td></tr>
+          <tr><td>Negativo</td><td>Login cai ou opt-out sobe</td><td>Desligar e testar a H3: menos volume, mais gatilho</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h3>Como escalo se der certo</h3>
+      <div class="flow" style="grid-template-columns:repeat(4,1fr)">
+        <div><b>Semanas 1–4</b><span>H2 no ar, sem custo. H1 sorteando. Implementar os eventos de data do 1º login e de abandono de contratação.</span></div>
+        <div><b>Leitura da H1</b><span>Rollout 10% → 50% → 100%, com holdout permanente de 5–10%.</span></div>
+        <div><b>2ª onda</b><span>Copy por perfil (benefício x urgência); WhatsApp ou RCS onde se paga; regra de próxima melhor oferta.</span></div>
+        <div><b>Contínuo</b><span>H3, H4 e H5. Backlog por ICE, um teste por público por vez.</span></div>
+      </div>
+      <div class="grid2" style="margin-top:18px">
+        <div><h4>Oportunidades de implementação de eventos a considerar</h4><ul class="plain" style="font-size:15px"><li>Data do 1º login (define a janela de verdade)</li><li>Eventos de início e abandono de contratação</li><li>Entrega e leitura por canal</li><li>CAC por canal de entrada</li></ul></div>
+        <div class="callout g" style="margin-top:0">Os dados mostram onde está o valor, mas não provam causa. Por isso a resposta é uma esteira: começo pelo maior gap com custo zero, deixo o canal pago provar que se paga e implemento os eventos que faltam.</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Métricas de negócio que acompanho no painel</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Grupo</th><th>Métricas</th><th>Para que serve</th></tr></thead>
+        <tbody>
+          <tr><td><b>Ativação</b></td><td>% de cadastro no app; % de login até D7; % que conclui a 1ª ação</td><td>Saber se a porta digital está abrindo</td></tr>
+          <tr><td><b>Engajamento</b></td><td>Entrega, leitura, CTR e resposta por mensagem e por canal; acessos em 30 dias</td><td>Diagnosticar onde a mensagem quebra</td></tr>
+          <tr><td><b>Originação por produto</b></td><td>Contratações de cartão, conta investimento e seguro por grupo; % com 2+ produtos; em produção, também o volume originado</td><td>Ver se a ativação vira negócio</td></tr>
+          <tr><td><b>Valor</b></td><td>Receita potencial por cliente tratado, total e por produto</td><td>Comparar grupos pelo resultado, não pelo clique</td></tr>
+          <tr><td><b>Custo e CAC</b></td><td>Custo de comunicação por cliente; CAC da ativação (custo ÷ ativações a mais); custo por produto originado; CAC por canal de entrada, quando disponível</td><td>Decidir onde o canal pago se paga</td></tr>
+          <tr><td><b>Saúde da base</b></td><td>Opt-out, bloqueio no WhatsApp, descadastro de SMS e reclamações</td><td>Garantir que o ganho não custa a relação com o cliente</td></tr>
+        </tbody>
+      </table></div>
+      <p class="callout b">A decisão do teste é pela métrica primária e pelo valor; as demais explicam o porquê e protegem a base. O CAC de aquisição por canal não está na base, por isso entra como dado a trazer do time de mídia e parcerias.</p>
+    </div>
+    <div class="card">
+      <h3>Critério de vitória</h3>
+      <ul class="hl">
+        <li><span class="ic ok">✔</span><span class="ok">Lift significativo na primária (p &lt; 0,05, poder 80%) contra o controle.</span></li>
+        <li><span class="ic ok">✔</span><span class="ok">Métricas de produto não pioram e guardrails ficam estáveis.</span></li>
+        <li><span class="ic warn">▲</span><span class="warn">WhatsApp só vence o SMS se o lift extra for ≥ 4,3 p.p., ponto em que R$&nbsp;1,20 por cliente se paga (piso, já que R$&nbsp;28 por ativado é teto).</span></li>
+      </ul>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Break-even WhatsApp</div><div class="v o">+4,3 p.p.</div><div class="s">de lift sobre o SMS</div></div>
+      <div class="kpi"><div class="k">Custo por ativação</div><div class="v">R$&nbsp;24</div><div class="s">se o lift for de 5 p.p.</div></div>
+      <div class="kpi"><div class="k">Valor por ativado</div><div class="v">~R$&nbsp;28</div><div class="s">teto otimista</div></div>
+      <div class="kpi"><div class="k">Holdout permanente</div><div class="v">5–10%</div><div class="s">para medir o efeito no tempo</div></div>
+    </div>
+    <div class="foot-nav"><button class="next ghost" data-go="experimento">Voltar</button><button class="next" data-go="tratamento">Voltar ao início</button></div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var ids=['tratamento','funil','recortes','padroes','hipoteses','experimento','decisao'];
+  var pills=[].slice.call(document.querySelectorAll('.pill'));
+  function show(id){
+    if(ids.indexOf(id)<0)id=ids[0];
+    ids.forEach(function(x){document.getElementById(x).classList.toggle('show',x===id)});
+    pills.forEach(function(p){p.setAttribute('aria-selected',p.dataset.t===id?'true':'false')});
+    try{history.replaceState(null,'','#'+id)}catch(e){}
+    window.scrollTo(0,0);
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-t],[data-go]');if(!t)return;
+    e.preventDefault();show(t.dataset.t||t.dataset.go);
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.target.closest('input,textarea'))return;
+    var cur=ids.indexOf((document.querySelector('.chap.show')||{}).id);
+    if(e.key==='ArrowRight'&&cur<ids.length-1)show(ids[cur+1]);
+    if(e.key==='ArrowLeft'&&cur>0)show(ids[cur-1]);
+  });
+  show((location.hash||'').slice(1));
+})();
+</script>
+</body>
+</html>
